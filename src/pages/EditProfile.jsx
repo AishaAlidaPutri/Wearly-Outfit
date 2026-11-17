@@ -26,13 +26,12 @@ export function EditProfile({ setActivePage }) {
     } catch {
       // LocalStorage fallback
     }
-    // Pindah kembali ke halaman profil setelah berhasil menyimpan
     setActivePage('profile');
   };
 
   const handleResetToDefault = () => {
-    if (window.confirm('Kembalikan data profil ke konfigurasi bawaan?')) {
-      setFormData(DEFAULT_PROFILE);
+    if (window.confirm('Kosongkan data profil?')) {
+      setFormData({ name: '', nim: '', kelompok: '' });
       try {
         localStorage.removeItem(STORAGE_KEY);
       } catch {
@@ -63,7 +62,7 @@ export function EditProfile({ setActivePage }) {
           <div>
             <h1 className="edit-page-title">Edit Profil Pengguna</h1>
             <p className="edit-page-subtitle">
-              Perbarui identitas, NIM, kelompok, dan bio Anda di sini.
+              Perbarui identitas Nama, NIM, dan Kelompok Anda di sini.
             </p>
           </div>
         </div>
@@ -71,14 +70,13 @@ export function EditProfile({ setActivePage }) {
         <form onSubmit={handleSubmit} className="edit-profile-form">
           {/* Nama Lengkap */}
           <div className="form-group">
-            <label className="form-label">Nama Lengkap *</label>
+            <label className="form-label">Nama Lengkap</label>
             <input
               type="text"
               name="name"
-              value={formData.name}
+              value={formData.name || ''}
               onChange={handleInputChange}
-              required
-              placeholder="Contoh: Alifa Putri"
+              placeholder="Masukkan nama lengkap Anda..."
               className="form-input"
             />
           </div>
@@ -86,68 +84,27 @@ export function EditProfile({ setActivePage }) {
           {/* NIM & Kelompok */}
           <div className="form-grid-2">
             <div className="form-group">
-              <label className="form-label">NIM *</label>
+              <label className="form-label">NIM</label>
               <input
                 type="text"
                 name="nim"
-                value={formData.nim}
+                value={formData.nim || ''}
                 onChange={handleInputChange}
-                required
-                placeholder="Contoh: 21120122140001"
+                placeholder="Masukkan NIM Anda..."
                 className="form-input"
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Kelompok *</label>
+              <label className="form-label">Kelompok</label>
               <input
                 type="text"
                 name="kelompok"
-                value={formData.kelompok}
+                value={formData.kelompok || ''}
                 onChange={handleInputChange}
-                required
                 placeholder="Contoh: Kelompok 01"
                 className="form-input"
               />
             </div>
-          </div>
-
-          {/* Peran & Lokasi */}
-          <div className="form-grid-2">
-            <div className="form-group">
-              <label className="form-label">Peran / Titel</label>
-              <input
-                type="text"
-                name="role"
-                value={formData.role}
-                onChange={handleInputChange}
-                placeholder="Contoh: Fashion Curator & Developer"
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Lokasi</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location || ''}
-                onChange={handleInputChange}
-                placeholder="Contoh: Semarang, Indonesia"
-                className="form-input"
-              />
-            </div>
-          </div>
-
-          {/* Bio */}
-          <div className="form-group">
-            <label className="form-label">Bio / Deskripsi Singkat</label>
-            <textarea
-              name="bio"
-              value={formData.bio}
-              onChange={handleInputChange}
-              rows={4}
-              placeholder="Tuliskan bio atau deskripsi gaya fashion Anda..."
-              className="form-textarea"
-            />
           </div>
 
           {/* Tombol Aksi */}
@@ -156,9 +113,9 @@ export function EditProfile({ setActivePage }) {
               type="button"
               className="btn-outline-danger"
               onClick={handleResetToDefault}
-              title="Kembalikan data ke setelan awal"
+              title="Kosongkan data profil"
             >
-              <RotateCcw size={15} /> Reset ke Awal
+              <RotateCcw size={15} /> Kosongkan Profil
             </button>
 
             <div className="actions-right">

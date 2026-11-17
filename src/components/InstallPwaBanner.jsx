@@ -8,53 +8,50 @@ export function InstallPwaBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Jangan tampilkan jika sudah di-install sebagai standalone PWA
+    // Jangan tampilkan jika sudah berjalan sebagai aplikasi standalone
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       window.navigator.standalone === true;
 
     if (isStandalone) return;
 
-    // Cek apakah user sudah menutup banner di sesi ini
-    const isDismissed = sessionStorage.getItem(DISMISS_KEY);
-    if (isDismissed) return;
-
-    // Tangkap event sebelum instalasi PWA dari browser
+    // Tangkap event sebelum instalasi browser (Chrome, Edge, Android)
     const handleBeforeInstall = (e) => {
+      // Cegah default mini-infobar Chrome agar kita bisa memicu prompt asli melalui tombol
       e.preventDefault();
       setDeferredPrompt(e);
-      setIsVisible(true);
+
+      // Hanya tampilkan jika belum ditutup oleh user di sesi ini
+      const isDismissed = sessionStorage.getItem(DISMISS_KEY);
+      if (!isDismissed) {
+        setIsVisible(true);
+      }
+    };
+
+    const handleAppInstalled = () => {
+      setIsVisible(false);
+      setDeferredPrompt(null);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
-
-    // Tampilkan banner setelah sedikit delay jika belum standalone dan belum ditutup
-    const timer = setTimeout(() => {
-      if (!isDismissed && !isStandalone) {
-        setIsVisible(true);
-      }
-    }, 1500);
+    window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
-      clearTimeout(timer);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === 'accepted') {
-        setIsVisible(false);
-      }
-      setDeferredPrompt(null);
-    } else {
-      // Petunjuk manual jika browser belum memicu prompt otomatis
-      alert(
-        'Untuk menginstal Wearly:\n• Pada Chrome/Edge desktop: Klik ikon Install di sebelah kanan address bar.\n• Pada Chrome Android: Klik menu ⋮ lalu pilih "Add to Home screen" / "Install app".\n• Pada Safari iOS: Tap tombol Share lalu pilih "Add to Home Screen".'
-      );
+    if (!deferredPrompt) return;
+
+    // Picu langsung dialog instalasi asli bawaan browser (native browser install prompt)
+    deferredPrompt.prompt();
+    const choiceResult = await deferredPrompt.userChoice;
+    if (choiceResult && choiceResult.outcome === 'accepted') {
+      setIsVisible(false);
     }
+    setDeferredPrompt(null);
   };
 
   const handleDismiss = () => {
@@ -62,11 +59,11 @@ export function InstallPwaBanner() {
     try {
       sessionStorage.setItem(DISMISS_KEY, 'true');
     } catch {
-      // Local storage fallback
+      // LocalStorage fallback
     }
   };
 
-  if (!isVisible) return null;
+  if (!isVisible || !deferredPrompt) return null;
 
   return (
     <div className="pwa-install-toast">
@@ -97,4 +94,3 @@ export function InstallPwaBanner() {
     </div>
   );
 }
-

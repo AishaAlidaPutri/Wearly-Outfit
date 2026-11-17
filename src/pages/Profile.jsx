@@ -23,7 +23,7 @@ export function Profile({ setActivePage }) {
         </div>
         <div className="profile-identity">
           <div className="profile-badge-row">
-            <span className="profile-badge">✦ Wearly Creator</span>
+            <span className="profile-badge">✦ Profil Pengguna</span>
             <button
               type="button"
               className="btn-edit-profile"
@@ -32,24 +32,22 @@ export function Profile({ setActivePage }) {
               <Edit3 size={15} /> Edit Profil
             </button>
           </div>
-          <h1 className="profile-name">{profile.name}</h1>
+          <h1 className="profile-name">
+            {profile.name ? profile.name : 'Nama Belum Diisi'}
+          </h1>
           <div className="profile-meta-chips">
             <span className="meta-chip">
-              <strong>NIM:</strong> {profile.nim}
+              <strong>NIM:</strong> {profile.nim ? profile.nim : '-'}
             </span>
             <span className="meta-chip">
-              <strong>Kelompok:</strong> {profile.kelompok}
+              <strong>Kelompok:</strong> {profile.kelompok ? profile.kelompok : '-'}
             </span>
-            <span className="meta-chip">
-              <strong>Peran:</strong> {profile.role}
-            </span>
-            {profile.location && (
-              <span className="meta-chip">
-                <strong>Lokasi:</strong> {profile.location}
-              </span>
-            )}
           </div>
-          <p className="profile-bio">{profile.bio}</p>
+          {!profile.name && !profile.nim && !profile.kelompok && (
+            <p className="profile-empty-hint">
+              Data profil masih kosong. Klik tombol <strong>Edit Profil</strong> di atas untuk mengisi identitas Anda.
+            </p>
+          )}
         </div>
       </section>
 

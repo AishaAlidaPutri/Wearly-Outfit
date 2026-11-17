@@ -5,12 +5,9 @@
  */
 
 export const DEFAULT_PROFILE = {
-  name: "Alifa Putri",
-  nim: "21120122140001",
-  kelompok: "Kelompok 01",
-  role: "Fashion Curator & App Developer",
-  bio: "Fashion enthusiast yang berfokus merancang digital wardrobe yang rapi, fungsional, dan modis.",
-  location: "Semarang, Indonesia",
+  name: "",
+  nim: "",
+  kelompok: "",
 };
 
 export const appInformation = {

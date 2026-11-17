@@ -2461,3 +2461,11 @@
     font-size: 0.78rem;
   }
 }
+
+
+.profile-empty-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 0.25rem;
+}

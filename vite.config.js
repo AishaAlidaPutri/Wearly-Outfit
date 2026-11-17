@@ -8,6 +8,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true,
+      },
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'pwa-icon.svg', 'icons.svg'],
       manifest: {
         name: 'Wearly — Outfit Planner',
