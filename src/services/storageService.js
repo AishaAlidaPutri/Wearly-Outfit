@@ -27,6 +27,11 @@ export const storageService = {
    * Mengembalikan URL publik gambar
    */
   async uploadImage(file) {
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+      throw new Error(
+        'Konfigurasi Supabase belum terpasang di Vercel. Harap atur Environment Variables di Vercel.'
+      );
+    }
     this.validateFile(file);
 
     const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
